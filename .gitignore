@@ -1,0 +1,16 @@
+.DS_Store
+Thumbs.db
+
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+.env
+.env.local
+*.pem
+*.key
+
+docker-compose.override.yml
+

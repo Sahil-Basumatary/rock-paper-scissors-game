@@ -1,0 +1,13 @@
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+.idea/
+*.iml
+
+application-local.yml
+application-local.properties
+application-secrets.yml
+
+.env
+.env.local

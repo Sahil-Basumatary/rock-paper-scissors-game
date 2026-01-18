@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rpsarena
+    username: your_username
+    password: your_password
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+clerk:
+  secret-key: sk_test_your_secret_here
+

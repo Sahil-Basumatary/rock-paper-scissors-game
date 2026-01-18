@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0d0c0a;
+  --foreground: #e8e6e3;
+  --gold-primary: #c9a227;
+  --gold-secondary: #a18320;
+  --bronze-primary: #cd7f32;
+  --bronze-secondary: #b56929;
+  --card-bg: #15140f;
+  --border-color: #2a2820;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
