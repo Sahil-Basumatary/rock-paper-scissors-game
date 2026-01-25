@@ -7,7 +7,12 @@ spring:
     redis:
       host: localhost
       port: 6379
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://your-app.clerk.accounts.dev
 
-clerk:
-  secret-key: sk_test_your_secret_here
+cors:
+  allowed-origins: http://localhost:3000
 
