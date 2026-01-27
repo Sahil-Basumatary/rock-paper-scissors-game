@@ -3,6 +3,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/rpsarena
     username: your_username
     password: your_password
+  jpa:
+    hibernate:
+      ddl-auto: update
   data:
     redis:
       host: localhost
