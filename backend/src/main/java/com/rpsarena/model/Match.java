@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,8 @@ import java.util.UUID;
 public class Match {
     @Id
     private UUID id;
+    @Version
+    private Long version;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_one_id")
     private Player playerOne;
