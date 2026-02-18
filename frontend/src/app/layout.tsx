@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Cinzel, Crimson_Pro } from "next/font/google";
+import { Playfair_Display, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const cinzel = Cinzel({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-cinzel",
+  variable: "--font-playfair",
   display: "swap",
 });
 
-const crimsonPro = Crimson_Pro({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-crimson",
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
   display: "swap",
 });
 
@@ -27,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${cinzel.variable} ${crimsonPro.variable} antialiased`}>
+      <body className={`${playfair.variable} ${inter.variable} ${spaceGrotesk.variable} antialiased`}>
         <ClerkProvider>
           {children}
         </ClerkProvider>

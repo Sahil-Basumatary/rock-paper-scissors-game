@@ -18,12 +18,12 @@ export default function ArenaPage() {
       <div className="flex-1 flex flex-col items-center justify-center px-4">
         <div className="w-full max-w-2xl">
           <div className="flex items-center justify-between mb-8">
-            <div className="font-body text-foreground/60 text-sm">
+            <div className="font-score text-foreground/60 text-sm tracking-wide">
               <span className="text-gold-400">{matchFormat}</span>
               <span className="mx-2">·</span>
               <span>Round {currentRound}</span>
             </div>
-            <div className="font-display text-lg tracking-wide">
+            <div className="font-score text-xl tracking-wide">
               <span className="text-gold-400">{scores.player}</span>
               <span className="text-foreground/40 mx-2">-</span>
               <span className="text-bronze-400">{scores.opponent}</span>
@@ -90,7 +90,7 @@ export default function ArenaPage() {
               <button
                 key={fmt}
                 onClick={() => setSelectedFormat(fmt)}
-                className={`px-4 py-2 rounded-lg font-body text-sm transition-all ${
+                className={`px-4 py-2 rounded-lg font-score text-sm tracking-wide transition-all ${
                   selectedFormat === fmt
                     ? "bg-gold-500/15 text-gold-400 border border-gold-500/40"
                     : "bg-arena-card text-foreground/50 border border-arena-border hover:border-foreground/20"

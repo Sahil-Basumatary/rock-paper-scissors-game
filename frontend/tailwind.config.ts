@@ -43,8 +43,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["var(--font-cinzel)", "serif"],
-        body: ["var(--font-crimson)", "serif"],
+        display: ["var(--font-playfair)", "serif"],
+        body: ["var(--font-inter)", "sans-serif"],
+        score: ["var(--font-space-grotesk)", "sans-serif"],
       },
     },
   },
