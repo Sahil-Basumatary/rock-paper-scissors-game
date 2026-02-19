@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Bot, Swords, ArrowLeft } from "lucide-react";
 import { useGameStore } from "@/stores/gameStore";
 import type { MatchFormat } from "@/types/game";
+import MoveSelector from "@/components/game/MoveSelector";
 
 const FORMATS: MatchFormat[] = ["BO1", "BO3", "BO5"];
 
@@ -29,10 +30,14 @@ export default function ArenaPage() {
               <span className="text-bronze-400">{scores.opponent}</span>
             </div>
           </div>
-          <div className="w-full h-80 rounded-xl border border-arena-border bg-arena-card flex items-center justify-center">
-            <p className="font-body text-foreground/40">
-              Game board loading...
-            </p>
+          <div className="w-full min-h-[20rem] rounded-xl border border-arena-border bg-arena-card flex items-center justify-center py-8">
+            {phase === "SELECTING" ? (
+              <MoveSelector />
+            ) : (
+              <p className="font-body text-foreground/40">
+                {phase === "CLASHING" ? "Clash!" : phase}
+              </p>
+            )}
           </div>
           <button
             onClick={resetMatch}
