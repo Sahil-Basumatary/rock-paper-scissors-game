@@ -6,10 +6,12 @@ import {
   type GamePhase,
   type RoundResult,
   type RoundSnapshot,
-  MOVES,
-  BEATS,
-  WINS_NEEDED,
 } from '@/types/game';
+import {
+  resolveRound as computeRoundResult,
+  getAiMove,
+  isMatchOver,
+} from '@/lib/gameEngine';
 
 interface GameState {
   phase: GamePhase;
@@ -43,15 +45,6 @@ const initialState: GameState = {
   currentRound: 1,
 };
 
-function getRandomMove(): Move {
-  return MOVES[Math.floor(Math.random() * MOVES.length)];
-}
-
-function resolveResult(playerMove: Move, opponentMove: Move): RoundResult {
-  if (playerMove === opponentMove) return 'DRAW';
-  return BEATS[playerMove] === opponentMove ? 'PLAYER_ONE_WIN' : 'PLAYER_TWO_WIN';
-}
-
 export const useGameStore = create<GameState & GameActions>()((set, get) => ({
   ...initialState,
 
@@ -65,10 +58,9 @@ export const useGameStore = create<GameState & GameActions>()((set, get) => ({
 
   selectMove: (move) => {
     if (get().phase !== 'SELECTING') return;
-    const opponentMove = getRandomMove();
     set({
       playerMove: move,
-      opponentMove,
+      opponentMove: getAiMove(),
       phase: 'CLASHING',
     });
   },
@@ -76,7 +68,7 @@ export const useGameStore = create<GameState & GameActions>()((set, get) => ({
   resolveRound: () => {
     const { phase, playerMove, opponentMove, scores, rounds, currentRound, matchFormat } = get();
     if (phase !== 'CLASHING' || !playerMove || !opponentMove) return;
-    const result = resolveResult(playerMove, opponentMove);
+    const result = computeRoundResult(playerMove, opponentMove);
     const updatedScores = { ...scores };
     if (result === 'PLAYER_ONE_WIN') updatedScores.player++;
     if (result === 'PLAYER_TWO_WIN') updatedScores.opponent++;
@@ -86,14 +78,11 @@ export const useGameStore = create<GameState & GameActions>()((set, get) => ({
       opponentMove,
       result,
     };
-    const matchOver =
-      updatedScores.player >= WINS_NEEDED[matchFormat] ||
-      updatedScores.opponent >= WINS_NEEDED[matchFormat];
     set({
       roundResult: result,
       scores: updatedScores,
       rounds: [...rounds, snapshot],
-      phase: matchOver ? 'MATCH_OVER' : 'RESULT',
+      phase: isMatchOver(updatedScores, matchFormat) ? 'MATCH_OVER' : 'RESULT',
     });
   },
 
