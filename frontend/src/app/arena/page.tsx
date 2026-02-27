@@ -2,53 +2,20 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Bot, Swords, ArrowLeft } from "lucide-react";
+import { Bot, Swords } from "lucide-react";
 import { useGameStore } from "@/stores/gameStore";
 import type { MatchFormat } from "@/types/game";
-import MoveSelector from "@/components/game/MoveSelector";
+import GameBoard from "@/components/game/GameBoard";
 
 const FORMATS: MatchFormat[] = ["BO1", "BO3", "BO5"];
 
 export default function ArenaPage() {
-  const { phase, matchFormat, currentRound, scores, startMatch, resetMatch } =
-    useGameStore();
+  const phase = useGameStore((s) => s.phase);
+  const startMatch = useGameStore((s) => s.startMatch);
   const [selectedFormat, setSelectedFormat] = useState<MatchFormat>("BO3");
 
   if (phase !== "IDLE") {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
-        <div className="w-full max-w-2xl">
-          <div className="flex items-center justify-between mb-8">
-            <div className="font-score text-foreground/60 text-sm tracking-wide">
-              <span className="text-gold-400">{matchFormat}</span>
-              <span className="mx-2">·</span>
-              <span>Round {currentRound}</span>
-            </div>
-            <div className="font-score text-xl tracking-wide">
-              <span className="text-gold-400">{scores.player}</span>
-              <span className="text-foreground/40 mx-2">-</span>
-              <span className="text-bronze-400">{scores.opponent}</span>
-            </div>
-          </div>
-          <div className="w-full min-h-[20rem] rounded-xl border border-arena-border bg-arena-card flex items-center justify-center py-8">
-            {phase === "SELECTING" ? (
-              <MoveSelector />
-            ) : (
-              <p className="font-body text-foreground/40">
-                {phase === "CLASHING" ? "Clash!" : phase}
-              </p>
-            )}
-          </div>
-          <button
-            onClick={resetMatch}
-            className="mt-6 flex items-center gap-2 font-body text-sm text-foreground/50 hover:text-gold-400 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Lobby
-          </button>
-        </div>
-      </div>
-    );
+    return <GameBoard />;
   }
 
   return (
