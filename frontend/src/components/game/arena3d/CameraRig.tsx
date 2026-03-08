@@ -14,6 +14,7 @@ const SWEEP_END_MS = 800;
 const IMPACT_MS = 1400;
 const ZOOM_END_MS = 1600;
 const SHAKE_DURATION_MS = 300;
+const SHAKE_MAX_OFFSET = 0.12;
 
 function easeInOutCubic(t: number): number {
   return t < 0.5
@@ -49,9 +50,9 @@ export default function CameraRig() {
     if (ms >= IMPACT_MS && ms < IMPACT_MS + SHAKE_DURATION_MS) {
       const shakeElapsed = ms - IMPACT_MS;
       const decay = Math.exp(-shakeElapsed * 0.01);
-      const offset = 0.12 * decay * Math.sin(shakeElapsed * 0.05);
-      camera.position.x += offset;
-      camera.position.y += offset * 0.4;
+      const intensity = SHAKE_MAX_OFFSET * decay;
+      camera.position.x += Math.sin(shakeElapsed * 0.06) * intensity;
+      camera.position.y += Math.cos(shakeElapsed * 0.05) * intensity * 0.6;
     }
 
     camera.lookAt(LOOK_TARGET);
