@@ -4,6 +4,9 @@ import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import type { Move } from "@/types/game";
+import ClashSequence from "./ClashSequence";
+import ImpactVFX from "./ImpactVFX";
+import CameraRig from "./CameraRig";
 
 const ARENA_BG = "#0d0c0a";
 const GOLD_LIGHT = "#c9a227";
@@ -50,7 +53,11 @@ function PostProcessing() {
   );
 }
 
-export default function ArenaScene(_props: ArenaSceneProps) {
+export default function ArenaScene({
+  playerMove,
+  opponentMove,
+  onComplete,
+}: ArenaSceneProps) {
   return (
     <div className="w-full h-full absolute inset-0">
       <Canvas
@@ -61,6 +68,13 @@ export default function ArenaScene(_props: ArenaSceneProps) {
         <color attach="background" args={[ARENA_BG]} />
         <Suspense fallback={null}>
           <ArenaLighting />
+          <ClashSequence
+            playerMove={playerMove}
+            opponentMove={opponentMove}
+            onComplete={onComplete}
+          />
+          <ImpactVFX />
+          <CameraRig />
           <PostProcessing />
         </Suspense>
       </Canvas>
