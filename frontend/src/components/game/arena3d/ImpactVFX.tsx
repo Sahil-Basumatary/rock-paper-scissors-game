@@ -6,11 +6,14 @@ import * as THREE from "three";
 
 const PARTICLE_COUNT = 24;
 const PARTICLE_SPEED = 3.0;
+const PARTICLE_BASE_SIZE = 0.08;
 const IMPACT_START_MS = 1400;
 const PARTICLE_DURATION_MS = 400;
+const FLASH_DURATION_MS = 200;
 
 export default function ImpactVFX() {
   const pointsRef = useRef<THREE.Points>(null);
+  const flashRef = useRef<THREE.Mesh>(null);
   const elapsedRef = useRef(0);
 
   const velocities = useMemo(() => {
@@ -39,47 +42,72 @@ export default function ImpactVFX() {
     elapsedRef.current += delta * 1000;
     const ms = elapsedRef.current;
     const points = pointsRef.current;
-    if (!points) return;
+    const flash = flashRef.current;
 
     if (ms < IMPACT_START_MS) {
-      points.visible = false;
+      if (points) points.visible = false;
+      if (flash) flash.visible = false;
       return;
     }
 
     const localMs = ms - IMPACT_START_MS;
-    if (localMs > PARTICLE_DURATION_MS) {
-      points.visible = false;
-      return;
+
+    if (points) {
+      if (localMs > PARTICLE_DURATION_MS) {
+        points.visible = false;
+      } else {
+        points.visible = true;
+        const t = localMs / PARTICLE_DURATION_MS;
+        const posAttr = points.geometry.attributes.position as THREE.BufferAttribute;
+        const dt = localMs / 1000;
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          posAttr.setXYZ(
+            i,
+            velocities[i * 3] * dt,
+            velocities[i * 3 + 1] * dt,
+            velocities[i * 3 + 2] * dt
+          );
+        }
+        posAttr.needsUpdate = true;
+        const mat = points.material as THREE.PointsMaterial;
+        mat.opacity = 1 - t;
+        mat.size = PARTICLE_BASE_SIZE * (1 + t * 2);
+      }
     }
 
-    points.visible = true;
-    const t = localMs / PARTICLE_DURATION_MS;
-    const posAttr = points.geometry.attributes.position as THREE.BufferAttribute;
-    const dt = localMs / 1000;
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      posAttr.setXYZ(
-        i,
-        velocities[i * 3] * dt,
-        velocities[i * 3 + 1] * dt,
-        velocities[i * 3 + 2] * dt
-      );
+    if (flash) {
+      if (localMs > FLASH_DURATION_MS) {
+        flash.visible = false;
+      } else {
+        flash.visible = true;
+        const t = localMs / FLASH_DURATION_MS;
+        flash.scale.setScalar(0.1 + t * 1.5);
+        (flash.material as THREE.MeshBasicMaterial).opacity = (1 - t) * 0.7;
+      }
     }
-    posAttr.needsUpdate = true;
-    const mat = points.material as THREE.PointsMaterial;
-    mat.opacity = 1 - t;
-    mat.size = 0.08 * (1 + t * 2);
   });
 
   return (
-    <points ref={pointsRef} geometry={geometry} visible={false}>
-      <pointsMaterial
-        color="#c9a227"
-        size={0.08}
-        transparent
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-        sizeAttenuation
-      />
-    </points>
+    <group>
+      <points ref={pointsRef} geometry={geometry} visible={false}>
+        <pointsMaterial
+          color="#c9a227"
+          size={PARTICLE_BASE_SIZE}
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+          sizeAttenuation
+        />
+      </points>
+      <mesh ref={flashRef} visible={false}>
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshBasicMaterial
+          color="#ffecd2"
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+    </group>
   );
 }

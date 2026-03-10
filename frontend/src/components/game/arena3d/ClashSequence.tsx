@@ -134,7 +134,6 @@ export default function ClashSequence({
       }
     }
 
-    // TODO: add freeze-frame stall at impact once CameraRig is in
     if (ms >= TOTAL_DURATION_MS && !completedRef.current) {
       completedRef.current = true;
       onComplete();
