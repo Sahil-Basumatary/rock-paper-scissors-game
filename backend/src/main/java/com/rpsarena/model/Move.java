@@ -6,15 +6,23 @@ public enum Move {
     ROCK, PAPER, SCISSORS;
 
     private static final EnumMap<Move, Move> BEATS = new EnumMap<>(Move.class);
+    private static final EnumMap<Move, Move> COUNTERED_BY = new EnumMap<>(Move.class);
 
     static {
         BEATS.put(ROCK, SCISSORS);
         BEATS.put(SCISSORS, PAPER);
         BEATS.put(PAPER, ROCK);
+        COUNTERED_BY.put(ROCK, PAPER);
+        COUNTERED_BY.put(PAPER, SCISSORS);
+        COUNTERED_BY.put(SCISSORS, ROCK);
     }
 
     public boolean beats(Move other) {
         return BEATS.get(this) == other;
+    }
+
+    public Move counterOf() {
+        return COUNTERED_BY.get(this);
     }
 }
 
